@@ -21,27 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-module devisualization.mesh.interfaces.material;
-import devisualization.image.color;
+module devisualization.mesh.wavefront_obj.material;
 
-interface Material {
-	@property {
-		Color_RGBA ambient();
-		Color_RGBA diffuse();
-		Color_RGBA specular();
-	}
-}
+shared static this() {
+	import devisualization.mesh.interfaces.creation;
+	import devisualization.mesh.interfaces.material;
+	import devisualization.mesh.wavefront_obj.material.defs;
+	import devisualization.mesh.wavefront_obj.material.reader;
 
-class MaterialManager {
-	private {
-		Material[string] materials;
+	void func(MaterialManager mmgr, string name, ubyte[] value) {
+		parseWaveFrontMaterial(mmgr, value);
 	}
 
-	void store(string name, Material value) {
-		materials[name] = value;
-	}
-
-	Material retrieve(string name) {
-		return materials.get(name, null);
-	}
+	registerMaterialParser(&func);
 }

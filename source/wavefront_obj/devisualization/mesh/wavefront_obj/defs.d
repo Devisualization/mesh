@@ -23,20 +23,25 @@
  */
 module devisualization.mesh.wavefront_obj.defs;
 import devisualization.mesh.interfaces.mesh;
+import devisualization.mesh.interfaces.material;
 
 class WavefrontObjMesh : Mesh {
 	package {
 		Vertex[] vertices_;
 		Face[] faceVertices;
+		MaterialManager mmgr;
+		Material material_;
 	}
 
-	this(ubyte[] data) {
+	this(ubyte[] data, MaterialManager mmgr = null) {
 		import devisualization.mesh.wavefront_obj.reader;
 		parseWaveFrontObjMesh(this, data);
+		this.mmgr = mmgr;
 	}
 
 	this(Mesh mesh) {
 		vertices_.length = mesh.vertices.length;
+		this.mmgr = mesh.materialManager;
 
 		foreach(size_t vi, Vertex v; mesh) {
 			vertices_[vi] = Vertex(v.x, v.y, v.z, v.w);
@@ -65,13 +70,10 @@ class WavefrontObjMesh : Mesh {
 	}
 
 	@property {
-		Vertex[] vertices() {
-			return vertices_;
-		}
-
-		Face[] faces() {
-			return faceVertices;
-		}
+		Vertex[] vertices() { return vertices_; }
+		Face[] faces() { return faceVertices; }
+		Material material() { return material_; }
+		MaterialManager materialManager() { return mmgr; }
 	}
 
 	Vertex vertex(size_t i)

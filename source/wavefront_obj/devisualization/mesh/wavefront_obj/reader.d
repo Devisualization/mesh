@@ -183,6 +183,15 @@ void parseLine(WavefrontObjMesh _, string buffer, ref vec3[] textureCoords, ref 
 				faceVertices ~= face;
 				break;
 
+			case "mtllib":
+				import devisualization.mesh.interfaces.creation : loadMaterialFromFile;
+				_.mmgr.loadMaterialFromFile(buffer);
+				break;
+
+			case "usemtl":
+				_.material_ = _.mmgr.retrieve(buffer);
+				break;
+
 			default:
 				break;
 		}

@@ -21,27 +21,5 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-module devisualization.mesh.interfaces.material;
-import devisualization.image.color;
+module devisualization.mesh.wavefront_obj.material.writer;
 
-interface Material {
-	@property {
-		Color_RGBA ambient();
-		Color_RGBA diffuse();
-		Color_RGBA specular();
-	}
-}
-
-class MaterialManager {
-	private {
-		Material[string] materials;
-	}
-
-	void store(string name, Material value) {
-		materials[name] = value;
-	}
-
-	Material retrieve(string name) {
-		return materials.get(name, null);
-	}
-}

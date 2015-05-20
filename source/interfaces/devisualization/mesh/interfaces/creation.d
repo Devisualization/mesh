@@ -24,6 +24,13 @@
 module devisualization.mesh.interfaces.creation;
 import devisualization.mesh.interfaces;
 
+// Mesh's
+
+private __gshared {
+	Mesh delegate(ubyte[])[string] loaders;
+	Mesh delegate(Mesh)[string] convertTos;
+}
+
 Mesh meshFromFile(string file) {
 	import std.file : read;
 	import std.path : extension;
@@ -47,11 +54,6 @@ Mesh convertTo(Mesh from, string type) {
 	}
 }
 
-private {
-	__gshared Mesh delegate(ubyte[])[string] loaders;
-	__gshared Mesh delegate(Mesh)[string] convertTos;
-}
-
 void registerMeshLoader(string ext, Mesh delegate(ubyte[] data) loader) {
 	loaders[ext] = loader;
 }
@@ -61,3 +63,41 @@ void registerMeshConvertTo(string ext, Mesh delegate(Mesh) converter) {
 }
 
 alias NotAMeshException = Exception;
+
+// Material's
+
+private __gshared {
+	bool delegate(MaterialManager mmgr, string name, void delegate(MaterialManager mmgr, string name, ubyte[] value) fileHandler)[] materialLoaders;
+	void delegate(MaterialManager mmgr, string name, ubyte[] value)[] materialFileReaders;
+
+	shared static this() {
+		registerMaterialFileReader((MaterialManager mmgr, string name, void delegate(MaterialManager mmgr, string name, ubyte[] value) fileHandler) {
+			import std.file : exists, read;
+			if (exists(name)) {
+				fileHandler(mmgr, name, read(value));
+					return true;
+			}
+
+			return false;
+		});
+	}
+}
+
+bool loadMaterialFromFile(MaterialManager mgr, string name) {
+	 foreach(mfr; materialFileReaders) {
+		foreach(ml; materialLoaders) {
+			if (ml(mgr, name, mfr))
+				return true;
+		}
+	}
+
+	return false;
+}
+
+void registerMaterialParser(void delegate(MaterialManager mmgr, string name, ubyte[] value) fileHandler) {
+	materialFileReaders ~= fileHandler;
+}
+
+void registerMaterialFileReader(bool delegate(MaterialManager mmgr, string name, void delegate(MaterialManager mmgr, string name, ubyte[] value) fileHandler) handler) {
+	materialLoaders ~= handler;
+}

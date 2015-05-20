@@ -1,0 +1,28 @@
+{
+	"name": "de_mesh",
+	"description": "Meshing loading and handling library for Devisualization.",
+	"copyright": "Copyright © 2014, Richard Andrew Cattermole, Devisualization.",
+	"authors": ["Richard Andrew Cattermole"],
+	"sourceFiles": [],
+	"targetType": "none",
+	"subPackages": [
+		{
+			"name": "interfaces",
+			"sourcePaths": ["source/interfaces"],
+			"importPaths": ["source/interfaces"],
+			"dependencies": {
+				"de_image:interfaces": ">=0.2.3",
+				"gl3n": "~master"
+			}
+		},
+		{
+			"name": "wavefront_obj",
+			"sourcePaths": ["source/wavefront_obj"],
+			"importPaths": ["source/wavefront_obj"],
+			"dependencies": {
+				"de_mesh:interfaces": "*",
+				"de_util:core": ">=0.0.3"
+			}
+		}
+	]
+}

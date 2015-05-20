@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 module devisualization.mesh.interfaces.mesh;
+import devisualization.mesh.interfaces.material;
 import gl3n.linalg : vec3, vec4;
 
 alias Vertex = vec4;
@@ -95,12 +96,14 @@ struct Face {
 }
 
 interface Mesh {
-	// this(ubyte[]);
+	// this(ubyte[], MaterialManager);
 	// this(Mesh);
 
 	@property {
 		Vertex[] vertices();
 		Face[] faces();
+		Material material();
+		MaterialManager materialManager();
 	}
 	
 	Vertex vertex(size_t);
